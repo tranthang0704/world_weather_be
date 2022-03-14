@@ -5,5 +5,13 @@ import tthang.world_weather.backend.models.WeatherInfo;
 import java.util.List;
 
 public interface SelectWeatherRepository {
-    List<WeatherInfo> getWeatherInfo(String id);
+
+    default void log() {
+        logout();
+    }
+
+    WeatherInfo getWeatherInfo(String id);
+    private void logout() {
+        System.out.println("Logged");
+    }
 }

@@ -1,15 +1,12 @@
 package tthang.world_weather.backend.repositories.implement;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import tthang.world_weather.backend.mapper.WeatherInfoRowMapper;
 import tthang.world_weather.backend.models.WeatherInfo;
 import tthang.world_weather.backend.repositories.interfaces.SelectWeatherRepository;
-
-import java.util.List;
 
 @Repository
 public class SelectWeatherRepositoryImpl implements SelectWeatherRepository {
@@ -18,16 +15,18 @@ public class SelectWeatherRepositoryImpl implements SelectWeatherRepository {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Override
-    public List<WeatherInfo> getWeatherInfo(String id) {
-        String selectSql = "SELECT * FROM weather.weather_info";
+    public WeatherInfo getWeatherInfo(String id) {
+
+        log();
+        String selectSql = "SELECT * FROM weather.weather_info WHERE city_id = :city_id";
         MapSqlParameterSource namedParameters = new MapSqlParameterSource();
         namedParameters.addValue("city_id", id);
         try {
-            RowMapper<WeatherInfo> mapper = BeanPropertyRowMapper.newInstance(WeatherInfo.class);
-            List<WeatherInfo> response = namedParameterJdbcTemplate.query(selectSql, namedParameters, mapper);
+            var mapper =  new WeatherInfoRowMapper();
+            WeatherInfo response = namedParameterJdbcTemplate.queryForObject(selectSql, namedParameters, mapper);
             return response;
         } catch (Exception e1) {
-            return null;
+            return new WeatherInfo();
         }
     }
 }
