@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: world-weather
   security:
     user:
       name: user
